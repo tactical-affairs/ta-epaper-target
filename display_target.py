@@ -17,20 +17,10 @@ screen = pygame.display.set_mode((W, H), pygame.FULLSCREEN)
 pygame.mouse.set_visible(False)
 screen.fill((0, 0, 0))
 
-# Load image, flood-fill background then clean up anti-aliased fringe
+# Load image, replace near-white/cream background pixels with black
 raw = cv2.imread(ASSET)
-ih, iw = raw.shape[:2]
-# Pass 1: aggressive flood fill from all corners
-mask = np.zeros((ih + 2, iw + 2), dtype=np.uint8)
-for corner in [(0, 0), (iw - 1, 0), (0, ih - 1), (iw - 1, ih - 1)]:
-    cv2.floodFill(raw, mask, corner, (0, 0, 0), loDiff=(50,)*3, upDiff=(50,)*3)
-# Pass 2: also flood fill from edge midpoints to catch connected fringe
-mid_pts = [(iw//2, 0), (iw//2, ih-1), (0, ih//2), (iw-1, ih//2)]
-for pt in mid_pts:
-    cv2.floodFill(raw, mask, pt, (0, 0, 0), loDiff=(50,)*3, upDiff=(50,)*3)
-# Pass 3: threshold any remaining near-white/cream pixels
 gray = cv2.cvtColor(raw, cv2.COLOR_BGR2GRAY)
-raw[gray > 200] = [0, 0, 0]
+raw[gray > 220] = [0, 0, 0]
 
 # Scale to fit screen
 ih, iw = raw.shape[:2]
