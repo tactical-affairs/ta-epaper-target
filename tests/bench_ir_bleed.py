@@ -37,7 +37,7 @@ EXPOSURE = -6
 MEASURE_FRAMES = 60   # frames to average for background measurement
 LASER_WAIT_FRAMES = 90  # max frames to wait for a laser hit
 
-cap = cv2.VideoCapture(DEVICE_INDEX)
+cap = cv2.VideoCapture(DEVICE_INDEX, cv2.CAP_V4L2)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, WIDTH)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, HEIGHT)
 cap.set(cv2.CAP_PROP_FPS, 60)

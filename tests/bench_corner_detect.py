@@ -39,7 +39,7 @@ CORNER_COLORS = [(0, 255, 0), (0, 200, 255), (255, 100, 0), (0, 0, 255)]
 cal_cfg = CalibrationConfig(led_threshold=180, min_stability_frames=1)
 cal = CalibrationManager(config=cal_cfg, display_size=DISPLAY_SIZE)
 
-cap = cv2.VideoCapture(DEVICE_INDEX)
+cap = cv2.VideoCapture(DEVICE_INDEX, cv2.CAP_V4L2)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, WIDTH)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, HEIGHT)
 cap.set(cv2.CAP_PROP_FPS, 60)
