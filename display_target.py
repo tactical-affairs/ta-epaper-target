@@ -4,11 +4,9 @@ Launched automatically via labwc autostart.
 """
 import sys
 import os
-import numpy as np
-import cv2
 import pygame
 
-ASSET = os.path.join(os.path.dirname(__file__), "assets", "uspsa_target.webp")
+ASSET = os.path.join(os.path.dirname(__file__), "assets", "uspsa_target.png")
 
 pygame.init()
 info = pygame.display.Info()
@@ -17,20 +15,11 @@ screen = pygame.display.set_mode((W, H), pygame.FULLSCREEN)
 pygame.mouse.set_visible(False)
 screen.fill((0, 0, 0))
 
-# Load image, replace near-white/cream background pixels with black
-raw = cv2.imread(ASSET)
-gray = cv2.cvtColor(raw, cv2.COLOR_BGR2GRAY)
-raw[gray > 220] = [0, 0, 0]
-
-# Scale to fit screen
-ih, iw = raw.shape[:2]
+img = pygame.image.load(ASSET).convert()
+iw, ih = img.get_size()
 scale = min(W / iw, H / ih)
 nw, nh = int(iw * scale), int(ih * scale)
-raw = cv2.resize(raw, (nw, nh), interpolation=cv2.INTER_AREA)
-
-# BGR → RGB for pygame
-rgb = cv2.cvtColor(raw, cv2.COLOR_BGR2RGB)
-img = pygame.surfarray.make_surface(np.transpose(rgb, (1, 0, 2)))
+img = pygame.transform.smoothscale(img, (nw, nh))
 screen.blit(img, ((W - nw) // 2, (H - nh) // 2))
 pygame.display.flip()
 
