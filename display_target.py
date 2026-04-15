@@ -17,10 +17,12 @@ screen = pygame.display.set_mode((W, H), pygame.FULLSCREEN)
 pygame.mouse.set_visible(False)
 screen.fill((0, 0, 0))
 
-# Load image, replace near-white background pixels with black
+# Load image, flood-fill background from all four corners then replace with black
 raw = cv2.imread(ASSET)
-gray = cv2.cvtColor(raw, cv2.COLOR_BGR2GRAY)
-raw[gray > 240] = [0, 0, 0]
+ih, iw = raw.shape[:2]
+mask = np.zeros((ih + 2, iw + 2), dtype=np.uint8)
+for corner in [(0, 0), (iw - 1, 0), (0, ih - 1), (iw - 1, ih - 1)]:
+    cv2.floodFill(raw, mask, corner, (0, 0, 0), loDiff=(30,)*3, upDiff=(30,)*3)
 
 # Scale to fit screen
 ih, iw = raw.shape[:2]
