@@ -9,7 +9,7 @@ class CameraConfig:
     device_index: int = 0
     width: int = 640
     height: int = 480
-    fps: int = 60
+    fps: int = 30
     exposure: int = -6          # V4L2 manual exposure value (log scale)
 
 

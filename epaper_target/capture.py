@@ -28,6 +28,8 @@ class CaptureThread:
     def start(self) -> None:
         """Open the camera and start the capture thread."""
         self._cap = cv2.VideoCapture(self._config.device_index, cv2.CAP_V4L2)
+        # Request MJPEG to get 30fps — YUYV is limited to 15fps on most webcams
+        self._cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
         self._cap.set(cv2.CAP_PROP_FRAME_WIDTH, self._config.width)
         self._cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self._config.height)
         self._cap.set(cv2.CAP_PROP_FPS, self._config.fps)
