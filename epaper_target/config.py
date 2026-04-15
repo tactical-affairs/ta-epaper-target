@@ -9,8 +9,8 @@ class CameraConfig:
     device_index: int = 0
     width: int = 640
     height: int = 480
-    fps: int = 30
-    exposure: int = -6          # V4L2 manual exposure value (log scale)
+    fps: int = 120
+    exposure: int = 50          # exposure_time_absolute in 100μs units (50 = 5ms → ~100fps)
 
 
 @dataclass

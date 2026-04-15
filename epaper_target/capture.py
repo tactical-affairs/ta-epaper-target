@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import subprocess
 import threading
 import time
 import cv2
@@ -33,8 +34,18 @@ class CaptureThread:
         self._cap.set(cv2.CAP_PROP_FRAME_WIDTH, self._config.width)
         self._cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self._config.height)
         self._cap.set(cv2.CAP_PROP_FPS, self._config.fps)
-        # Disable auto-exposure and set manual value
-        self._cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 1)  # 1 = manual mode on V4L2
+        # Manual exposure: V4L2 auto_exposure=1 is Manual Mode, =3 is Aperture Priority
+        # exposure_time_absolute is in units of 100μs (e.g. 50 = 5ms → ~100fps max)
+        # Disable dynamic framerate so the camera doesn't throttle fps based on exposure
+        dev = f"/dev/video{self._config.device_index}"
+        subprocess.run(
+            ["v4l2-ctl", "-d", dev,
+             "--set-ctrl=auto_exposure=1",
+             f"--set-ctrl=exposure_time_absolute={self._config.exposure}",
+             "--set-ctrl=exposure_dynamic_framerate=0"],
+            check=False, capture_output=True,
+        )
+        self._cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 1)
         self._cap.set(cv2.CAP_PROP_EXPOSURE, self._config.exposure)
         if not self._cap.isOpened():
             raise RuntimeError(f"Cannot open camera at index {self._config.device_index}")
