@@ -1,0 +1,1 @@
+- [BOM and Pricing](project_bom_pricing.md) — BOM $120-145 at 100 units, target retail $349-449, positioned between phone-based and projector systems
